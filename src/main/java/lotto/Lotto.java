@@ -19,4 +19,14 @@ public class Lotto {
     public List<Integer> getLotto() {
         return numbers;
     }
+
+    public int countMatches(int[] winngNumbers) {
+        int matchCount = 0;
+        for (int i = 0; i < winngNumbers.length; i++) {
+            if(numbers.contains(winngNumbers[i])){
+                matchCount++;
+            }
+        }
+        return matchCount;
+    }
 }

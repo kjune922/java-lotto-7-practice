@@ -27,41 +27,32 @@ public class Game {
         List<List<Integer>> lottos = new ArrayList<>();
 
         for (int i = 0; i < LottoCount; i++) {
-            List<Integer> numbers = new ArrayList<>();
-            for (int j = 0; j < 6; j++) {
-                numbers.add(generate.generateRandomNumber());
-            }
-            Lotto lotto = new Lotto(numbers);
+            Lotto lotto = new Lotto(generate.LottoNumberGenerator());
             lottos.add(lotto.getLotto());
+        }
+
+        for (int i = 0; i < lottos.size(); i++) {
+            System.out.println(lottos.get(i));
         }
 
         outputView.printCorrectInputNumber();
         String correctNumber = inputView.readCorrectNumber();
         String[] correctNumberArr = parseNumber.parse(correctNumber);
 
-        int[] numbers = new int[6];
+        int[] winngNumbers = new int[6];
         for (int i = 0; i < correctNumberArr.length; i++) {
-            numbers[i] = Integer.parseInt(correctNumberArr[i]);
+            winngNumbers[i] = Integer.parseInt(correctNumberArr[i]);
         }
 
+        int[] matchArr = new int[LottoCount];
+        int correctResult = 0;
 
-        outputView.printBonusNumber();
-
-        inputView.readBonusNumber();
-
-        int[] correctCountArr = new int[LottoCount];
-        int maxCorrectCount = 0;
-        int index = 0;
-        for (List<Integer> lotto : lottos) {
-            int correctCount = 0;
-            correctCountArr[index] = checkLotto(lotto,numbers,correctCount);
-            maxCorrectCount = Math.max(maxCorrectCount,correctCountArr[index]);
+        for (int i = 0; i < lottos.size(); i++) {
+            Lotto lotto = new Lotto(lottos.get(i));
+            matchArr[i] = lotto.countMatches(winngNumbers);
+            correctResult += findCorrectResult(matchArr[i]);
         }
-
-        int correctResult = findCorrectResult(maxCorrectCount);
-
         String result = calculateResult(correctResult,buyCharge);
-
         outputView.printResult(result);
     }
 
@@ -73,24 +64,17 @@ public class Game {
         return df.format(result);
     }
 
-    private int findCorrectResult(int maxCorrectCount) {
+    private int findCorrectResult(int maxCorrectCount) { // 이 부분은 ENUM으로 한번바꿔보자
         if(maxCorrectCount == 6){
             return 2000000000;
         } else if(maxCorrectCount == 5){
             return 1500000;
         } else if(maxCorrectCount == 4){
             return 50000;
+        } else if(maxCorrectCount == 3){
+            return 5000;
         }
-        return 5000;
-    }
-
-    private int checkLotto(List<Integer> lotto, int[] numbers, int correctCount) {
-        for (int i = 0; i < lotto.size(); i++) {
-            if(lotto.get(i) == numbers[i]){
-                correctCount++;
-            }
-        }
-        return correctCount;
+        return 0;
     }
 
     private int buy(int buyCharge) {
