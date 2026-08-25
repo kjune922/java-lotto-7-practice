@@ -1,5 +1,7 @@
 package view;
 
+import lotto.Lotto;
+
 public class OutputView {
 
     public void printBuyMessage(){
@@ -20,5 +22,9 @@ public class OutputView {
 
     public void printResult(String result){
         System.out.println("총 수익율은 " + result + "% 입니다");
+    }
+
+    public void printCurLottoNumbers(Lotto lotto) {
+        System.out.println(lotto.getLotto());
     }
 }

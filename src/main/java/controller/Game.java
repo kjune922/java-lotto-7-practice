@@ -1,6 +1,6 @@
 package controller;
 
-import generate.Generate;
+import generate.lottoNumberGenerator;
 import lotto.Lotto;
 import parse.ParseNumber;
 import view.InputView;
@@ -15,7 +15,7 @@ public class Game {
     private final InputView inputView = new InputView();
     private final OutputView outputView = new OutputView();
     private final ParseNumber parseNumber = new ParseNumber();
-    private final Generate generate = new Generate();
+    private final lottoNumberGenerator generate = new lottoNumberGenerator();
 
     public void start(){
         outputView.printBuyMessage();
@@ -24,42 +24,40 @@ public class Game {
         int LottoCount = buy(buyCharge);
 
         outputView.printLotto(LottoCount);
-        List<List<Integer>> lottos = new ArrayList<>();
+
+        List<Lotto> lottos = new ArrayList<>();
 
         for (int i = 0; i < LottoCount; i++) {
-            Lotto lotto = new Lotto(generate.LottoNumberGenerator());
-            lottos.add(lotto.getLotto());
+            lottos.add(new Lotto(generate.generate()));
         }
 
-        for (int i = 0; i < lottos.size(); i++) {
-            System.out.println(lottos.get(i));
+        for (Lotto lotto : lottos) {
+            outputView.printCurLottoNumbers(lotto);
         }
 
         outputView.printCorrectInputNumber();
         String correctNumber = inputView.readCorrectNumber();
         String[] correctNumberArr = parseNumber.parse(correctNumber);
 
-        int[] winngNumbers = new int[6];
+        int[] winningNumbers = new int[6];
         for (int i = 0; i < correctNumberArr.length; i++) {
-            winngNumbers[i] = Integer.parseInt(correctNumberArr[i]);
+            winningNumbers[i] = Integer.parseInt(correctNumberArr[i]);
         }
 
-        int[] matchArr = new int[LottoCount];
-        int correctResult = 0;
+        long correctResult = 0;
 
         for (int i = 0; i < lottos.size(); i++) {
-            Lotto lotto = new Lotto(lottos.get(i));
-            matchArr[i] = lotto.countMatches(winngNumbers);
-            correctResult += findCorrectResult(matchArr[i]);
+            Lotto lotto = lottos.get(i);
+            correctResult += findCorrectResult(lotto.countMatches(winningNumbers));
         }
         String result = calculateResult(correctResult,buyCharge);
         outputView.printResult(result);
     }
 
-    private String calculateResult(int correctResult, int buyCharge) {
+    private String calculateResult(long correctResult, int buyCharge) {
         double result = (double) correctResult / buyCharge * 100;
 
-        DecimalFormat df = new DecimalFormat("0.##");
+        DecimalFormat df = new DecimalFormat("#,##0.0");
 
         return df.format(result);
     }
