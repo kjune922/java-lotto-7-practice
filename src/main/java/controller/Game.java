@@ -36,11 +36,11 @@ public class Game {
         }
 
         outputView.printCorrectInputNumber();
-        outputView.printBonusNumber();
-        int bonusNumber = inputView.readBonusNumber();
-
         String correctNumber = inputView.readCorrectNumber();
         String[] correctNumberArr = parseNumber.parse(correctNumber);
+
+        outputView.printBonusNumber();
+        int bonusNumber = inputView.readBonusNumber();
 
         int[] winningNumbers = new int[6];
         for (int i = 0; i < correctNumberArr.length; i++) {
