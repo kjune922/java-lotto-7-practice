@@ -1,6 +1,6 @@
 package controller;
 
-import generate.lottoNumberGenerator;
+import generate.LottoNumberGenerator;
 import lotto.Lotto;
 import parse.ParseNumber;
 import view.InputView;
@@ -15,7 +15,7 @@ public class Game {
     private final InputView inputView = new InputView();
     private final OutputView outputView = new OutputView();
     private final ParseNumber parseNumber = new ParseNumber();
-    private final lottoNumberGenerator generate = new lottoNumberGenerator();
+    private final LottoNumberGenerator generate = new LottoNumberGenerator();
 
     public void start(){
         outputView.printBuyMessage();
@@ -53,7 +53,8 @@ public class Game {
 
             Lotto lotto = lottos.get(i);
             int curMatch = lotto.countMatches(winningNumbers);
-            if(curMatch >= 5 && lotto.checkBonus(lotto,bonusNumber)){
+
+            if(curMatch == 5 && lotto.checkBonus(bonusNumber)){
                 sumPrice += findBonusResult();
             } else{
                 sumPrice += findCorrectResult(curMatch);

@@ -30,7 +30,7 @@ public class Lotto {
         return matchCount;
     }
 
-    public boolean checkBonus(Lotto lotto, int bonusNumber) {
+    public boolean checkBonus(int bonusNumber) {
         for (Integer number : numbers) {
             if(number == bonusNumber){
                 return true;
