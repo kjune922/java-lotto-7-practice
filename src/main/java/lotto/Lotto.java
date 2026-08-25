@@ -29,4 +29,13 @@ public class Lotto {
         }
         return matchCount;
     }
+
+    public boolean checkBonus(Lotto lotto, int bonusNumber) {
+        for (Integer number : numbers) {
+            if(number == bonusNumber){
+                return true;
+            }
+        }
+        return false;
+    }
 }

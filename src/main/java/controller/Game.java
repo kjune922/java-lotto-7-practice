@@ -36,6 +36,9 @@ public class Game {
         }
 
         outputView.printCorrectInputNumber();
+        outputView.printBonusNumber();
+        int bonusNumber = inputView.readBonusNumber();
+
         String correctNumber = inputView.readCorrectNumber();
         String[] correctNumberArr = parseNumber.parse(correctNumber);
 
@@ -44,18 +47,28 @@ public class Game {
             winningNumbers[i] = Integer.parseInt(correctNumberArr[i]);
         }
 
-        long correctResult = 0;
+        long sumPrice = 0;
 
         for (int i = 0; i < lottos.size(); i++) {
+
             Lotto lotto = lottos.get(i);
-            correctResult += findCorrectResult(lotto.countMatches(winningNumbers));
+            int curMatch = lotto.countMatches(winningNumbers);
+            if(curMatch >= 5 && lotto.checkBonus(lotto,bonusNumber)){
+                sumPrice += findBonusResult();
+            } else{
+                sumPrice += findCorrectResult(curMatch);
+            }
         }
-        String result = calculateResult(correctResult,buyCharge);
+        String result = calculateResult(sumPrice,buyCharge);
         outputView.printResult(result);
     }
 
-    private String calculateResult(long correctResult, int buyCharge) {
-        double result = (double) correctResult / buyCharge * 100;
+    private int findBonusResult() {
+        return 30_000_000;
+    }
+
+    private String calculateResult(long sumPrice, int buyCharge) {
+        double result = (double) sumPrice / buyCharge * 100;
 
         DecimalFormat df = new DecimalFormat("#,##0.0");
 
