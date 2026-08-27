@@ -77,7 +77,7 @@ public class Game {
     private long calculateTotalPrice(Map<Rank, Integer> rankMap) {
         long totalPrice = 0;
 
-        for (Rank rank : rankMap.keySet()) {
+        for (Rank rank : Rank.values()) {
             int winCount = rankMap.get(rank);
             totalPrice += (long) rank.getPrice() * winCount;
         }

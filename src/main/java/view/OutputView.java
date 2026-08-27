@@ -34,10 +34,15 @@ public class OutputView {
     public void printLottoResult(Map<Rank, Integer> rankMap) {
         System.out.println("당첨 통계");
         System.out.println("---");
-        System.out.println("3개 일치 (5000원) - " + rankMap.get(Rank.FIFTH) + "개");
-        System.out.println("4개 일치 (50,000원) - " + rankMap.get(Rank.FOURTH) + "개");
-        System.out.println("5개 일치 (1,500,000원) - " + rankMap.get(Rank.THIRD) + "개");
-        System.out.println("6개 일치 (30,000,000원) - " + rankMap.get(Rank.SECOND) + "개");
-        System.out.println("7개 일치 (2,000,000,000원) - " + rankMap.get(Rank.FIRST) + "개");
+        System.out.println("3개 일치 (5000원) - "
+                + rankMap.get(Rank.FIFTH) + "개");
+        System.out.println("4개 일치 (50,000원) - "
+                + rankMap.get(Rank.FOURTH) + "개");
+        System.out.println("5개 일치 (1,500,000원) - "
+                + rankMap.get(Rank.THIRD) + "개");
+        System.out.println("5개 일치, 보너스 볼 일치 (30,000,000원) - "
+                + rankMap.get(Rank.SECOND) + "개");
+        System.out.println("6개 일치 (2,000,000,000원) - "
+                + rankMap.get(Rank.FIRST) + "개");
     }
 }
