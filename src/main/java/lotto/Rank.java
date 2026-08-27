@@ -29,4 +29,23 @@ public enum Rank {
     public int getMatchCount() {
         return matchCount;
     }
+
+    public static Rank find(int matchCount, boolean isBonus){
+        if(matchCount == 6){
+            return FIRST;
+        }
+        if(matchCount == 5 && isBonus){
+            return SECOND;
+        }
+        if(matchCount == 5){
+            return THIRD;
+        }
+        if(matchCount == 4){
+            return FOURTH;
+        }
+        if(matchCount == 3){
+            return FIFTH;
+        }
+        return NONE;
+    }
 }

@@ -9,7 +9,9 @@ import view.OutputView;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 
 public class Game {
 
@@ -48,8 +50,11 @@ public class Game {
             winningNumbers[i] = Integer.parseInt(correctNumberArr[i]);
         }
 
-        long sumPrice = 0;
-        int[] checkLotto = new int[7];
+        Map<Rank,Integer> rankMap = new EnumMap<>(Rank.class);
+
+        for (Rank rank : Rank.values()) {
+            rankMap.put(rank,0);
+        }
 
         for (int i = 0; i < lottos.size(); i++) {
 
@@ -57,25 +62,27 @@ public class Game {
             int curMatch = lotto.countMatches(winningNumbers);
             boolean isBonus = lotto.checkBonus(bonusNumber);
 
-            if(curMatch > 2){
-                if(!isBonus) {
-                    if (curMatch == 6) {
-                        checkLotto[curMatch - 1]++;
-                    } else {
-                        checkLotto[curMatch - 2]++;
-                    }
-                } else {
-                    checkLotto[4]++;
-                }
-            } else{
-                checkLotto[0]++;
-            }
+            Rank rank = Rank.find(curMatch, isBonus);
 
-            outputView.printLottoResult(curMatch,isBonus,checkLotto);
-            sumPrice += findCorrectResult(curMatch).getPrice();
+            int curCount = rankMap.get(rank);
+            rankMap.put(rank,curCount + 1);
         }
+        outputView.printLottoResult(rankMap);
+
+        long sumPrice = calculateTotalPrice(rankMap);
         String result = calculateResult(sumPrice,buyCharge);
         outputView.printResult(result);
+    }
+
+    private long calculateTotalPrice(Map<Rank, Integer> rankMap) {
+        long totalPrice = 0;
+
+        for (Rank rank : rankMap.keySet()) {
+            int winCount = rankMap.get(rank);
+            totalPrice += (long) rank.getPrice() * winCount;
+        }
+        return totalPrice;
+
     }
 
     private String calculateResult(long sumPrice, int buyCharge) {
@@ -84,19 +91,6 @@ public class Game {
         DecimalFormat df = new DecimalFormat("#,##0.0");
 
         return df.format(result);
-    }
-
-    private Rank findCorrectResult(int maxCorrectCount) { // 이 부분은 ENUM으로 한번바꿔보자
-        if(maxCorrectCount == 6){
-            return Rank.FIRST;
-        } else if(maxCorrectCount == 5){
-            return Rank.THIRD;
-        } else if(maxCorrectCount == 4){
-            return Rank.FOURTH;
-        } else if(maxCorrectCount == 3){
-            return Rank.FIFTH;
-        }
-        return Rank.NONE;
     }
 
     private int buy(int buyCharge) {

@@ -1,6 +1,9 @@
 package view;
 
 import lotto.Lotto;
+import lotto.Rank;
+
+import java.util.Map;
 
 public class OutputView {
 
@@ -20,19 +23,21 @@ public class OutputView {
         System.out.println("보너스 번호를 입력해 주세요.");
     }
 
-    public void printLottoResult(int curMatch, boolean isBonus, int[] checkLotto){
-
-        System.out.println("당첨 통계");
-        System.out.println("---");
-
-
-    }
-
     public void printResult(String result){
         System.out.println("총 수익률은 " + result + "%입니다.");
     }
 
     public void printCurLottoNumbers(Lotto lotto) {
         System.out.println(lotto.getLotto());
+    }
+
+    public void printLottoResult(Map<Rank, Integer> rankMap) {
+        System.out.println("당첨 통계");
+        System.out.println("---");
+        System.out.println("3개 일치 (5000원) - " + rankMap.get(Rank.FIFTH) + "개");
+        System.out.println("4개 일치 (50,000원) - " + rankMap.get(Rank.FOURTH) + "개");
+        System.out.println("5개 일치 (1,500,000원) - " + rankMap.get(Rank.THIRD) + "개");
+        System.out.println("6개 일치 (30,000,000원) - " + rankMap.get(Rank.SECOND) + "개");
+        System.out.println("7개 일치 (2,000,000,000원) - " + rankMap.get(Rank.FIRST) + "개");
     }
 }
