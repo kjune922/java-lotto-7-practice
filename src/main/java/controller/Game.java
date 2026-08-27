@@ -4,9 +4,9 @@ import generate.LottoNumberGenerator;
 import lotto.Lotto;
 import lotto.Rank;
 import parse.ParseNumber;
+import validator.InputValidator;
 import view.InputView;
 import view.OutputView;
-
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -19,11 +19,11 @@ public class Game {
     private final OutputView outputView = new OutputView();
     private final ParseNumber parseNumber = new ParseNumber();
     private final LottoNumberGenerator generate = new LottoNumberGenerator();
+    private final InputValidator inputValidator = new InputValidator();
 
     public void start(){
         outputView.printBuyMessage();
-        int buyCharge = inputView.readInputBuyCharge();
-        validateBuyCharge(buyCharge);
+        int buyCharge = readPurchaseAmount();
         int LottoCount = buy(buyCharge);
 
         outputView.printLotto(LottoCount);
@@ -97,9 +97,15 @@ public class Game {
         return buyCharge / 1000;
     }
 
-    private void validateBuyCharge(int buyCharge) {
-        if(buyCharge <= 0 || buyCharge % 1000 != 0){
-            throw new IllegalArgumentException("[ERROR] 구입 금액은 1000원 단위 입니다.");
+    private int readPurchaseAmount() {
+        while(true){
+            try{
+                int amount = inputView.readInputBuyCharge();
+                inputValidator.validateBuyCharge(amount);
+                return amount;
+            } catch (IllegalArgumentException e){
+                outputView.printError(e.getMessage());
+            }
         }
     }
 }

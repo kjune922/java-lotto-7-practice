@@ -45,4 +45,8 @@ public class OutputView {
         System.out.println("6개 일치 (2,000,000,000원) - "
                 + rankMap.get(Rank.FIRST) + "개");
     }
+
+    public void printError(String message) {
+        System.out.println("[ERROR] 로또 금액 입력은 숫자여야합니다.");
+    }
 }
