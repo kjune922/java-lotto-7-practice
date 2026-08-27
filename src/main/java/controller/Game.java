@@ -2,6 +2,7 @@ package controller;
 
 import generate.LottoNumberGenerator;
 import lotto.Lotto;
+import lotto.Rank;
 import parse.ParseNumber;
 import view.InputView;
 import view.OutputView;
@@ -55,17 +56,13 @@ public class Game {
             int curMatch = lotto.countMatches(winningNumbers);
 
             if(curMatch == 5 && lotto.checkBonus(bonusNumber)){
-                sumPrice += findBonusResult();
+                sumPrice += Rank.SECOND.getPrice();
             } else{
-                sumPrice += findCorrectResult(curMatch);
+                sumPrice += findCorrectResult(curMatch).getPrice();
             }
         }
         String result = calculateResult(sumPrice,buyCharge);
         outputView.printResult(result);
-    }
-
-    private int findBonusResult() {
-        return 30_000_000;
     }
 
     private String calculateResult(long sumPrice, int buyCharge) {
@@ -76,17 +73,17 @@ public class Game {
         return df.format(result);
     }
 
-    private int findCorrectResult(int maxCorrectCount) { // 이 부분은 ENUM으로 한번바꿔보자
+    private Rank findCorrectResult(int maxCorrectCount) { // 이 부분은 ENUM으로 한번바꿔보자
         if(maxCorrectCount == 6){
-            return 2000000000;
+            return Rank.FIRST;
         } else if(maxCorrectCount == 5){
-            return 1500000;
+            return Rank.THIRD;
         } else if(maxCorrectCount == 4){
-            return 50000;
+            return Rank.FOURTH;
         } else if(maxCorrectCount == 3){
-            return 5000;
+            return Rank.FIFTH;
         }
-        return 0;
+        return Rank.NONE;
     }
 
     private int buy(int buyCharge) {

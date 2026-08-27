@@ -21,7 +21,7 @@ public class OutputView {
     }
 
     public void printResult(String result){
-        System.out.println("총 수익율은 " + result + "%입니다");
+        System.out.println("총 수익률은 " + result + "%입니다.");
     }
 
     public void printCurLottoNumbers(Lotto lotto) {
