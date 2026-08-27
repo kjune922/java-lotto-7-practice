@@ -49,17 +49,30 @@ public class Game {
         }
 
         long sumPrice = 0;
+        int[] checkLotto = new int[7];
 
         for (int i = 0; i < lottos.size(); i++) {
 
             Lotto lotto = lottos.get(i);
             int curMatch = lotto.countMatches(winningNumbers);
+            boolean isBonus = lotto.checkBonus(bonusNumber);
 
-            if(curMatch == 5 && lotto.checkBonus(bonusNumber)){
-                sumPrice += Rank.SECOND.getPrice();
+            if(curMatch > 2){
+                if(!isBonus) {
+                    if (curMatch == 6) {
+                        checkLotto[curMatch - 1]++;
+                    } else {
+                        checkLotto[curMatch - 2]++;
+                    }
+                } else {
+                    checkLotto[4]++;
+                }
             } else{
-                sumPrice += findCorrectResult(curMatch).getPrice();
+                checkLotto[0]++;
             }
+
+            outputView.printLottoResult(curMatch,isBonus,checkLotto);
+            sumPrice += findCorrectResult(curMatch).getPrice();
         }
         String result = calculateResult(sumPrice,buyCharge);
         outputView.printResult(result);
@@ -91,7 +104,7 @@ public class Game {
     }
 
     private void validateBuyCharge(int buyCharge) {
-        if(buyCharge % 1000 != 0){
+        if(buyCharge <= 0 || buyCharge % 1000 != 0){
             throw new IllegalArgumentException("[ERROR] 구입 금액은 1000원 단위 입니다.");
         }
     }

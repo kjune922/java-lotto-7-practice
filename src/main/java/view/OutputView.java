@@ -20,6 +20,14 @@ public class OutputView {
         System.out.println("보너스 번호를 입력해 주세요.");
     }
 
+    public void printLottoResult(int curMatch, boolean isBonus, int[] checkLotto){
+
+        System.out.println("당첨 통계");
+        System.out.println("---");
+
+
+    }
+
     public void printResult(String result){
         System.out.println("총 수익률은 " + result + "%입니다.");
     }
