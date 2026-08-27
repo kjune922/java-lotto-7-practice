@@ -47,6 +47,6 @@ public class OutputView {
     }
 
     public void printError(String message) {
-        System.out.println("[ERROR] 로또 금액 입력은 숫자여야합니다.");
+        System.out.println(message);
     }
 }

@@ -1,5 +1,6 @@
 package controller;
 
+import calculator.Calculator;
 import generate.LottoNumberGenerator;
 import lotto.Lotto;
 import lotto.Rank;
@@ -20,11 +21,12 @@ public class Game {
     private final ParseNumber parseNumber = new ParseNumber();
     private final LottoNumberGenerator generate = new LottoNumberGenerator();
     private final InputValidator inputValidator = new InputValidator();
+    private final Calculator calculator = new Calculator();
 
     public void start(){
         outputView.printBuyMessage();
         int buyCharge = readPurchaseAmount();
-        int LottoCount = buy(buyCharge);
+        int LottoCount = calculator.buy(buyCharge);
 
         outputView.printLotto(LottoCount);
 
@@ -69,32 +71,9 @@ public class Game {
         }
         outputView.printLottoResult(rankMap);
 
-        long sumPrice = calculateTotalPrice(rankMap);
-        String result = calculateResult(sumPrice,buyCharge);
+        long sumPrice = calculator.calculateTotalPrice(rankMap);
+        String result = calculator.calculateResult(sumPrice,buyCharge);
         outputView.printResult(result);
-    }
-
-    private long calculateTotalPrice(Map<Rank, Integer> rankMap) {
-        long totalPrice = 0;
-
-        for (Rank rank : Rank.values()) {
-            int winCount = rankMap.get(rank);
-            totalPrice += (long) rank.getPrice() * winCount;
-        }
-        return totalPrice;
-
-    }
-
-    private String calculateResult(long sumPrice, int buyCharge) {
-        double result = (double) sumPrice / buyCharge * 100;
-
-        DecimalFormat df = new DecimalFormat("#,##0.0");
-
-        return df.format(result);
-    }
-
-    private int buy(int buyCharge) {
-        return buyCharge / 1000;
     }
 
     private int readPurchaseAmount() {
@@ -103,6 +82,8 @@ public class Game {
                 int amount = inputView.readInputBuyCharge();
                 inputValidator.validateBuyCharge(amount);
                 return amount;
+            } catch (NumberFormatException e){
+                outputView.printError("[ERROR] 구입 금액은 숫자여야 합니다.");
             } catch (IllegalArgumentException e){
                 outputView.printError(e.getMessage());
             }

@@ -228,3 +228,57 @@ public class Lotto {
 - **Git의 커밋 단위는 앞 단계에서 `docs/README.md`에 정리한 기능 목록 단위**로 추가한다.
     - [커밋 메시지 컨벤션](https://gist.github.com/stephenparish/9941e89d80e2bc58a153) 가이드를 참고해 커밋 메시지를 작성한다.
 - 과제 진행 및 제출 방법은 [프리코스 과제 제출](https://github.com/woowacourse/woowacourse-docs/tree/master/precourse) 문서를 참고한다.
+
+
+# 잘못된 입력 재입력 처리 :: 2026-08-27
+
+구입 금액을 입력받을 때 잘못된 값이 들어오면 프로그램을 종료하지 않고, 오류 메시지를 출력한 뒤 다시 입력받도록 구현했다.
+
+```java
+private int readPurchaseAmount() {
+    while (true) {
+        try {
+            int amount = inputView.readInputBuyCharge();
+            inputValidator.validateBuyCharge(amount);
+            return amount;
+        } catch (IllegalArgumentException e) {
+            outputView.printError(e.getMessage());
+        }
+    }
+}
+```
+
+### `while (true)`와 `return`
+
+`while (true)`는 반복 조건이 항상 참이지만, 정상적인 금액이 입력되면 `return amount`가 실행된다. `return`은 값을 반환하는 동시에 반복문과 현재 메서드를 모두 종료한다.
+
+* 정상 입력: 검증 통과 → 입력값 반환 → 반복 종료
+* 잘못된 입력: 예외 발생 → 오류 출력 → 다시 입력
+* 숫자가 아닌 입력: `Integer.parseInt()`에서 예외 발생 → 오류 출력 → 다시 입력
+
+처음에는 검증만 실행하고 `return`을 작성하지 않아 정상적인 값을 입력해도 계속 입력을 기다리는 문제가 발생했다. 이를 통해 반복 입력 구조에는 정상 흐름을 종료할 수 있는 명확한 탈출 조건이 필요하다는 것을 알게 되었다.
+
+### 재귀 호출과 반복 호출의 차이
+
+`Game`의 `readPurchaseAmount()` 안에서 다음 코드를 실행하더라도 재귀 호출은 발생하지 않는다.
+
+```java
+inputView.readInputBuyCharge();
+```
+
+`inputView.`가 붙어 있으므로 현재 `Game`의 메서드가 아니라 `InputView` 객체의 메서드를 호출하기 때문이다.
+
+반대로 `Game.readPurchaseAmount()` 안에서 다음과 같이 자기 자신을 다시 호출하면 재귀 호출이 된다.
+
+```java
+readPurchaseAmount();
+```
+
+### 역할 분리
+
+* `InputView`: 사용자 입력을 한 번 읽고 숫자로 변환한다.
+* `InputValidator`: 구입 금액이 양수이며 1,000원 단위인지 검증한다.
+* `Game`: 예외를 처리하고 정상적인 값이 입력될 때까지 전체 재입력 흐름을 제어한다.
+* `OutputView`: 오류 메시지를 출력한다.
+
+입력, 검증, 재입력 흐름, 출력을 분리하면서 각 클래스의 책임을 더 명확하게 만들었다.
